@@ -1,0 +1,102 @@
+class ElevatorModelView
+  constructor: () ->
+    @floors = 16
+    @cars = [{floor: 1, moving: false},
+             {floor: 1, moving: false},
+             {floor: 1, moving: false},
+             {floor: 1, moving: false},
+             {floor: 1, moving: false},
+             {floor: 1, moving: false}]
+
+    me = this
+
+  moveCar: (car, floor) ->
+    myCars = @cars
+
+    deferred = $.Deferred()
+    if @cars[car - 1].moving
+      return deferred.reject()
+    if floor < 1 or floor > @floors
+      return deferred.reject()
+    @cars[car - 1].moving = true
+    $("#elevator#{car} .car")
+      .animate({bottom: "#{(floor - 1) * 23}px"},
+               duration: 700 * Math.abs(myCars[car - 1].floor - floor)
+               easing: 'linear'
+               complete: ->
+                 myCars[car - 1].floor = floor
+                 myCars[car - 1].moving = false
+                 deferred.resolve())
+      .delay(2500).fadeIn(300)
+    $("#elevator#{car} .car > div")
+      .animate({top: "#{(-368 + floor * 23)}px"},
+               duration: 700 * Math.abs(myCars[car - 1].floor - floor)
+               easing: 'linear')
+      .delay(2500).fadeIn(300)
+    deferred
+
+modelView = new ElevatorModelView()
+modelViewTwo = new ElevatorModelView()
+modelViewThree = new ElevatorModelView()
+modelViewFour = new ElevatorModelView()
+modelViewFive = new ElevatorModelView()
+modelViewSix = new ElevatorModelView()
+modelViewSeven = new ElevatorModelView()
+modelViewEight = new ElevatorModelView()
+modelViewNine = new ElevatorModelView()
+modelViewTen = new ElevatorModelView()
+modelViewEleven = new ElevatorModelView()
+modelViewTwelve = new ElevatorModelView()
+modelViewThirteen = new ElevatorModelView()
+modelViewFourteen = new ElevatorModelView()
+modelViewFifteen = new ElevatorModelView()
+
+$(modelView).on 'pressed', (e, {floor, dir}) ->
+  console.log "Pressed #{floor}-#{dir}"
+  modelView.moveCar(modelView.closestIdleCar(floor), floor).then(-> modelView.clearButton(floor, dir))
+
+modelView.moveCar 1, 16
+modelView.moveCar 2, 4
+modelView.moveCar 3, 8
+modelViewTwo.moveCar 1, 10
+modelViewTwo.moveCar 2, 7
+modelViewTwo.moveCar 3, 7
+modelViewThree.moveCar 1, 8
+modelViewThree.moveCar 2, 10
+modelViewThree.moveCar 3, 5
+modelViewFour.moveCar 1, 6
+modelViewFour.moveCar 2, 11
+modelViewFour.moveCar 3, 6
+modelViewFive.moveCar 1, 4
+modelViewFive.moveCar 2, 12
+modelViewFive.moveCar 3, 7
+modelViewSix.moveCar 1, 2
+modelViewSix.moveCar 2, 14
+modelViewSix.moveCar 3, 4
+modelViewSeven.moveCar 1, 2
+modelViewSeven.moveCar 2, 16
+modelViewSeven.moveCar 3, 2
+modelViewEight.moveCar 1, 4
+modelViewEight.moveCar 2, 15
+modelViewEight.moveCar 3, 2
+modelViewNine.moveCar 1, 7
+modelViewNine.moveCar 2, 13
+modelViewNine.moveCar 3, 3
+modelViewTen.moveCar 1, 10
+modelViewTen.moveCar 2, 11
+modelViewTen.moveCar 3, 7
+modelViewEleven.moveCar 1, 12
+modelViewEleven.moveCar 2, 8
+modelViewEleven.moveCar 3, 9
+modelViewTwelve.moveCar 1, 14
+modelViewTwelve.moveCar 2, 10
+modelViewTwelve.moveCar 3, 11
+modelViewThirteen.moveCar 1, 11
+modelViewThirteen.moveCar 2, 14
+modelViewThirteen.moveCar 3, 14
+modelViewFourteen.moveCar 1, 9
+modelViewFourteen.moveCar 2, 15
+modelViewFourteen.moveCar 3, 12
+modelViewFifteen.moveCar 1, 6
+modelViewFifteen.moveCar 2, 15
+modelViewFifteen.moveCar 3, 11
